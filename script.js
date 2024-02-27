@@ -14,7 +14,7 @@ const ballRadius = 4;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 // ball speed
-let dx = 2;
+let dx = 3;
 let dy = -2;
 
 /* Paddle variable */
@@ -27,6 +27,8 @@ let paddleY = canvas.height - paddleHeight - 10;
 let rightPressed = false;
 let leftPressed = false;
 
+const PADDLE_SENSITIVITY = 7;
+
 function drawBall() {
   ctx.beginPath();
   ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -38,7 +40,6 @@ function drawPaddle() {
   ctx.fillStyle = 'red';
   ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
 }
-drawPaddle();
 
 function drawBricks() {}
 function collisionDetection() {}
@@ -47,28 +48,35 @@ function ballMovement() {
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-
   //upper wall bounce ball
   if (y + dy < ballRadius) {
     dy = -dy;
   }
 
-  // Game over
-  if (y + dy > canvas.height - ballRadius) {
+  // Ball bounces on paddle
+  const isBallSameXAsPaddle = x > paddleX && x < paddleX + paddleWidth;
+
+  const isBallTouchingPaddle = y + dy > paddleY;
+
+  if (isBallSameXAsPaddle && isBallTouchingPaddle) {
+    dy = -dy;
+  }
+
+  // Ball touch down: Game over
+  else if (y + dy > canvas.height - ballRadius) {
     console.log('Game Over!');
     document.location.reload();
   }
-
   x += dx;
   y += dy;
 }
 
 function paddleMovement() {
-  /*  if (keydown right) {
-    drawPaddle += dx
-
- }
-    */
+  if (rightPressed && paddleX < canvas.width - paddleWidth) {
+    paddleX += PADDLE_SENSITIVITY;
+  } else if (leftPressed && paddleX > 0) {
+    paddleX -= PADDLE_SENSITIVITY;
+  }
 }
 
 function cleanCanvas() {
@@ -87,6 +95,7 @@ function initEvents() {
       leftPressed = true;
     }
   }
+
   function keyUpHandler(event) {
     const { key } = event;
     if (key === 'Right' || key === 'ArrowRight') {
@@ -95,18 +104,22 @@ function initEvents() {
       leftPressed = false;
     }
   }
+  console.log({ rightPressed, leftPressed });
 }
-initEvents();
 function draw() {
+  console.log({ rightPressed, leftPressed });
+
   cleanCanvas();
-  initEvents();
   drawBall();
   drawBricks();
   drawPaddle();
+
   collisionDetection();
   ballMovement();
   paddleMovement();
-  console.log('drawing canvas');
+
   window.requestAnimationFrame(draw);
 }
+
 // draw();
+initEvents();

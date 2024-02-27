@@ -91,7 +91,7 @@ function drawBricks() {
       const currentBrick = bricks[c][r];
       if (currentBrick.status === BRICK_STATUS.DESTROYED) continue;
 
-      /*  const clipX = currentBrick.color * 32;
+      const clipX = currentBrick.color * 32;
 
       ctx.drawImage(
         $bricks,
@@ -103,16 +103,34 @@ function drawBricks() {
         currentBrick.y,
         brickWidth,
         brickHeight
-      ); */
+      );
 
-      ctx.fillStyle = 'yellow';
+      /* ctx.fillStyle = 'yellow';
       ctx.rect(currentBrick.x, currentBrick.y, brickWidth, brickHeight);
-      ctx.fill();
+      ctx.fill(); */
     }
   }
 }
 
-function collisionDetection() {}
+function collisionDetection() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const currentBrick = bricks[c][r];
+      if (currentBrick.status === BRICK_STATUS.DESTROYED) continue;
+
+      const isBallSameXAsBrick =
+        x > currentBrick.x && x < currentBrick.x + brickWidth;
+
+      const isBallSameYAsBrick =
+        y > currentBrick.y && y < currentBrick.y + brickHeight;
+
+      if (isBallSameXAsBrick && isBallSameYAsBrick) {
+        dy = -dy;
+        currentBrick.status = BRICK_STATUS.DESTROYED;
+      }
+    }
+  }
+}
 function ballMovement() {
   //side wall bounce ball
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {

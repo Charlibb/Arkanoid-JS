@@ -11,7 +11,7 @@ canvas.height = 400;
 let counter = 0;
 
 /* Ball Variables */
-const ballRadius = 4;
+const ballRadius = 3;
 
 // ball position
 let x = canvas.width / 2;
@@ -21,6 +21,8 @@ let dx = 3;
 let dy = -2;
 
 /* Paddle variable */
+const PADDLE_SENSITIVITY = 7;
+
 const paddleWidth = 50;
 const paddleHeight = 10;
 
@@ -30,7 +32,35 @@ let paddleY = canvas.height - paddleHeight - 10;
 let rightPressed = false;
 let leftPressed = false;
 
-const PADDLE_SENSITIVITY = 7;
+/* Bricks Variable */
+const brickRowCount = 6;
+const brickColumnCount = 13;
+const brickWidth = 32;
+const brickHeight = 16;
+const brickPadding = 0;
+const brickOffsetTop = 80;
+const brickOffsetLeft = 16;
+const bricks = [];
+
+const BRICK_STATUS = {
+  ACTIVE: 1,
+  DESTROYED: 0,
+};
+
+for (let c = 0; c < brickColumnCount; c++) {
+  bricks[c] = [];
+  for (let r = 0; r < brickRowCount; r++) {
+    const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
+    const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
+    const random = Math.floor(Math.random() * 8);
+    bricks[c][r] = {
+      x: brickX,
+      y: brickY,
+      status: BRICK_STATUS.ACTIVE,
+      color: random,
+    };
+  }
+}
 
 function drawBall() {
   ctx.beginPath();
@@ -43,19 +73,41 @@ function drawPaddle() {
   /*   ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
    */
   ctx.drawImage(
-    $sprite,
-    29,
-    174,
-    paddleWidth,
-    paddleHeight,
-    paddleX,
-    paddleY,
-    paddleWidth,
-    paddleHeight
+    $sprite, // uploaded image
+    29, // ClipX : cut coordinates
+    174, // ClipY : cut coordinates
+    paddleWidth, // Cut size
+    paddleHeight, // cut size
+    paddleX, // x position of Image
+    paddleY, // y position of Image
+    paddleWidth, // Image width
+    paddleHeight //  Image height
   );
 }
 
-function drawBricks() {}
+function drawBricks() {
+  for (let c = 0; c < brickColumnCount; c++) {
+    for (let r = 0; r < brickRowCount; r++) {
+      const currentBrick = bricks[c][r];
+      if (currentBrick.status === BRICK_STATUS.DESTROYED) continue;
+
+      const clipX = currentBrick.color * 32;
+
+      ctx.drawImage(
+        $bricks,
+        clipX,
+        0,
+        brickWidth, // 31
+        brickHeight, // 14
+        currentBrick.x,
+        currentBrick.y,
+        brickWidth,
+        brickHeight
+      );
+    }
+  }
+}
+
 function collisionDetection() {}
 function ballMovement() {
   //side wall bounce ball
@@ -122,11 +174,11 @@ function initEvents() {
 }
 function draw() {
   console.log({ rightPressed, leftPressed });
-
   cleanCanvas();
+
   drawBall();
-  drawBricks();
   drawPaddle();
+  drawBricks();
 
   collisionDetection();
   ballMovement();

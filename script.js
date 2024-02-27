@@ -17,8 +17,15 @@ let y = canvas.height - 30;
 let dx = 2;
 let dy = -2;
 
+/* Paddle variable */
 const paddleWidth = 50;
-const paddleHeight = 20;
+const paddleHeight = 10;
+
+let paddleX = (canvas.width - paddleWidth) / 2;
+let paddleY = canvas.height - paddleHeight - 10;
+
+let rightPressed = false;
+let leftPressed = false;
 
 function drawBall() {
   ctx.beginPath();
@@ -28,14 +35,12 @@ function drawBall() {
   ctx.closePath();
 }
 function drawPaddle() {
-  ctx.beginPath();
   ctx.fillStyle = 'red';
-  ctx.fill();
-  ctx.fillRect(x - 20, y + 20, paddleWidth, paddleHeight);
-  ctx.closePath();
+  ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
 }
-function drawBricks() {}
+drawPaddle();
 
+function drawBricks() {}
 function collisionDetection() {}
 function ballMovement() {
   //side wall bounce ball
@@ -57,18 +62,47 @@ function ballMovement() {
   x += dx;
   y += dy;
 }
-function paddleMovement() {}
+
+function paddleMovement() {
+  /*  if (keydown right) {
+    drawPaddle += dx
+
+ }
+    */
+}
 
 function cleanCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
+function initEvents() {
+  document.addEventListener('keydown', keyDownHandler);
+  document.addEventListener('keyup', keyUpHandler);
+
+  function keyDownHandler(event) {
+    const { key } = event;
+    if (key === 'Right' || key === 'ArrowRight') {
+      rightPressed = true;
+    } else if (key === 'Left' || key === 'ArrowLeft') {
+      leftPressed = true;
+    }
+  }
+  function keyUpHandler(event) {
+    const { key } = event;
+    if (key === 'Right' || key === 'ArrowRight') {
+      rightPressed = false;
+    } else if (key === 'Left' || key === 'ArrowLeft') {
+      leftPressed = false;
+    }
+  }
+}
+initEvents();
 function draw() {
   cleanCanvas();
-
+  initEvents();
   drawBall();
   drawBricks();
-
+  drawPaddle();
   collisionDetection();
   ballMovement();
   paddleMovement();

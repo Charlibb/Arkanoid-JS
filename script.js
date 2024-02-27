@@ -37,7 +37,7 @@ const brickRowCount = 6;
 const brickColumnCount = 13;
 const brickWidth = 32;
 const brickHeight = 16;
-const brickPadding = 0;
+const brickPadding = 2;
 const brickOffsetTop = 80;
 const brickOffsetLeft = 16;
 const bricks = [];
@@ -91,7 +91,7 @@ function drawBricks() {
       const currentBrick = bricks[c][r];
       if (currentBrick.status === BRICK_STATUS.DESTROYED) continue;
 
-      const clipX = currentBrick.color * 32;
+      /*  const clipX = currentBrick.color * 32;
 
       ctx.drawImage(
         $bricks,
@@ -103,7 +103,11 @@ function drawBricks() {
         currentBrick.y,
         brickWidth,
         brickHeight
-      );
+      ); */
+
+      ctx.fillStyle = 'yellow';
+      ctx.rect(currentBrick.x, currentBrick.y, brickWidth, brickHeight);
+      ctx.fill();
     }
   }
 }

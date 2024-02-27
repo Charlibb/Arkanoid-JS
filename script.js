@@ -1,6 +1,9 @@
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
+const $sprite = document.querySelector('#sprite');
+const $bricks = document.querySelector('#bricks');
+
 canvas.width = 448;
 canvas.height = 400;
 
@@ -37,8 +40,19 @@ function drawBall() {
   ctx.closePath();
 }
 function drawPaddle() {
-  ctx.fillStyle = 'red';
-  ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+  /*   ctx.fillRect(paddleX, paddleY, paddleWidth, paddleHeight);
+   */
+  ctx.drawImage(
+    $sprite,
+    29,
+    174,
+    paddleWidth,
+    paddleHeight,
+    paddleX,
+    paddleY,
+    paddleWidth,
+    paddleHeight
+  );
 }
 
 function drawBricks() {}
@@ -121,5 +135,5 @@ function draw() {
   window.requestAnimationFrame(draw);
 }
 
-// draw();
+draw();
 initEvents();

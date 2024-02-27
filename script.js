@@ -35,8 +35,8 @@ let leftPressed = false;
 /* Bricks Variable */
 const brickRowCount = 6;
 const brickColumnCount = 13;
-const brickWidth = 32;
-const brickHeight = 16;
+const brickWidth = 30;
+const brickHeight = 14;
 const brickPadding = 2;
 const brickOffsetTop = 80;
 const brickOffsetLeft = 16;
